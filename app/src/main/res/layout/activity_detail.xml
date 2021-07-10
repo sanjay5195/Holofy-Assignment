@@ -4,15 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
-
-    <com.devsan.holofyassignment.ui.VideoPlayerRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    </com.devsan.holofyassignment.ui.VideoPlayerRecyclerView>
-
+    tools:context=".ui.DetailActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
