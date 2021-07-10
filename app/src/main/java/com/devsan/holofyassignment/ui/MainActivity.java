@@ -1,6 +1,8 @@
 package com.devsan.holofyassignment.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
@@ -52,17 +54,17 @@ public class MainActivity extends AppCompatActivity {
                                             MediaVO mediaObject,
                                             LinearLayout linearLayout) {
 
-//                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-//                        intent.putExtra(EXTRA_ITEM, mediaObject);
-//                        intent.putExtra(EXTRA_SEEK, mRecyclerView.seekPosition);
-//                        intent.putExtra(EXTRA_TRANSITION_NAME, ViewCompat.getTransitionName(frameLayout));
-//
-//                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                                MainActivity.this,
-//                                frameLayout,
-//                                ViewCompat.getTransitionName(frameLayout));
-//
-//                        startActivity(intent, options.toBundle());
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        intent.putExtra(EXTRA_ITEM, mediaObject);
+                        intent.putExtra(EXTRA_SEEK, mRecyclerView.seekPosition);
+                        intent.putExtra(EXTRA_TRANSITION_NAME, ViewCompat.getTransitionName(linearLayout));
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                MainActivity.this,
+                                linearLayout,
+                                ViewCompat.getTransitionName(linearLayout));
+
+                        startActivity(intent, options.toBundle());
                     }
                 });
         mRecyclerView.setAdapter(adapter);

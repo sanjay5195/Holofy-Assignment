@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:transitionName="simple_activity_transition"
             android:paddingBottom="16dp">
 
             <FrameLayout
@@ -33,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="#000"
-                android:scaleType="center"
-                android:transitionName="simple_activity_transition">
+                android:scaleType="center">
 
                 <ImageView
                     android:id="@+id/thumbnail"

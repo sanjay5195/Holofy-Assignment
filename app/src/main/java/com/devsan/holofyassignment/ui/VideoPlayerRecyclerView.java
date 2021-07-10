@@ -311,7 +311,7 @@ public class VideoPlayerRecyclerView extends RecyclerView {
 
         videoSurfaceView.setPlayer(videoPlayer);
 
-        viewHolderParent.setOnClickListener(videoViewClickListener);
+//        viewHolderParent.setOnClickListener(videoViewClickListener);
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                 context, Util.getUserAgent(context, "RecyclerView VideoPlayer"));
