@@ -18,24 +18,31 @@ public class MainListHomeViewModel extends ViewModel {
 
     public MutableLiveData<String> messageError = new MutableLiveData<>();
 
+    // progress bucket we can use in future for show loader while fetching data from server
+    public MutableLiveData<Integer> progressBucket = new MutableLiveData<>();
+
     @Inject
     public MainListHomeViewModel(MainListRepository listRepository) {
         this.listRepository = listRepository;
         dataList.setValue(new ArrayList<>());
+        progressBucket.setValue(0);
     }
 
     public void getMediaList() {
 
+        progressBucket.setValue(progressBucket.getValue() + 1);
         listRepository.getMediaList(new DataResponseListener<ArrayList<MediaVO>>() {
             @Override
             public void onSuccess(ArrayList<MediaVO> mediaVOS) {
 
+                progressBucket.setValue(progressBucket.getValue() - 1);
                 dataList.setValue(mediaVOS);
             }
 
             @Override
             public void onFailure(String message) {
 
+                progressBucket.setValue(progressBucket.getValue() - 1);
                 messageError.setValue(message);
             }
         });

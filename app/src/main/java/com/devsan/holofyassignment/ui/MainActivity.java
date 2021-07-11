@@ -3,6 +3,7 @@ package com.devsan.holofyassignment.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,13 +20,12 @@ import com.devsan.holofyassignment.adapter.VideoPlayerRecyclerAdapter;
 import com.devsan.holofyassignment.dagger.DaggerMainListComponent;
 import com.devsan.holofyassignment.dagger.MainListComponent;
 import com.devsan.holofyassignment.dagger.MainListModule;
+import com.devsan.holofyassignment.databinding.ActivityMainBinding;
 import com.devsan.holofyassignment.models.MainListHomeViewModel;
 import com.devsan.holofyassignment.models.MediaVO;
-import com.devsan.holofyassignment.util.Resources;
 import com.devsan.holofyassignment.util.VerticalSpacingItemDecorator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -38,19 +38,19 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     MainListHomeViewModel viewModel;
 
-    private VideoPlayerRecyclerView mRecyclerView;
+    ActivityMainBinding activityMainBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        activityMainBinding = DataBindingUtil.setContentView(this,
+                R.layout.activity_main);
 
         MainListComponent mainListComponent = DaggerMainListComponent.builder()
                 .mainListModule(new MainListModule(this))
                 .build();
         mainListComponent.inject(this);
-
-        mRecyclerView = findViewById(R.id.recycler_view);
 
         observViewModel();
         viewModel.getMediaList();
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
 
-                if(s != null && !s.isEmpty()) {
+                if (s != null && !s.isEmpty()) {
 
                     Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                 }
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(ArrayList<MediaVO> mediaVOS) {
 
-                if(!mediaVOS.isEmpty()) {
+                if (!mediaVOS.isEmpty()) {
                     initRecyclerView();
                 }
             }
@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        activityMainBinding.recyclerView.setLayoutManager(layoutManager);
         VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(10);
-        mRecyclerView.addItemDecoration(itemDecorator);
+        activityMainBinding.recyclerView.addItemDecoration(itemDecorator);
 
         final ArrayList<MediaVO> mediaObjects = viewModel.dataList.getValue();
-        mRecyclerView.setMediaObjects(mediaObjects);
+        activityMainBinding.recyclerView.setMediaObjects(mediaObjects);
         VideoPlayerRecyclerAdapter adapter = new VideoPlayerRecyclerAdapter(mediaObjects, initGlide(),
                 new VideoPlayerRecyclerAdapter.ItemClickListener() {
                     @Override
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         intent.putExtra(EXTRA_ITEM, mediaObject);
-                        intent.putExtra(EXTRA_SEEK, mRecyclerView.seekPosition);
+                        intent.putExtra(EXTRA_SEEK, activityMainBinding.recyclerView.seekPosition);
                         intent.putExtra(EXTRA_TRANSITION_NAME, ViewCompat.getTransitionName(linearLayout));
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent, options.toBundle());
                     }
                 });
-        mRecyclerView.setAdapter(adapter);
+        activityMainBinding.recyclerView.setAdapter(adapter);
     }
 
     private RequestManager initGlide() {
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (mRecyclerView != null)
-            mRecyclerView.releasePlayer();
+        if (activityMainBinding.recyclerView != null)
+            activityMainBinding.recyclerView.releasePlayer();
         super.onDestroy();
     }
 }
