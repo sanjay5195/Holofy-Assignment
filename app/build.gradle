@@ -53,5 +53,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     api "com.google.dagger:dagger:2.24"
+    testImplementation 'org.json:json:20140107'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.24'
 }
