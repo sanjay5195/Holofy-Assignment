@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -53,9 +52,7 @@ public class VideoPlayerRecyclerView extends RecyclerView {
 
     private static final String TAG = "VideoPlayerRecyclerView";
 
-    private enum VolumeState {ON, OFF}
-
-    ;
+    private enum VolumeState {ON, OFF};
 
     public long seekPosition = 0;
 

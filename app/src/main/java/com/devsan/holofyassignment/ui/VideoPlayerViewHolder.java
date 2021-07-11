@@ -1,17 +1,11 @@
 package com.devsan.holofyassignment.ui;
 
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
-import com.devsan.holofyassignment.R;
 import com.devsan.holofyassignment.databinding.ItemLayoutVideoBinding;
 import com.devsan.holofyassignment.models.MediaVO;
 

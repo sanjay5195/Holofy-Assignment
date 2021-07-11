@@ -1,7 +1,5 @@
 package com.devsan.holofyassignment.data;
 
-import android.webkit.JavascriptInterface;
-
 import com.devsan.holofyassignment.models.MediaVO;
 import com.devsan.holofyassignment.util.DBError;
 
