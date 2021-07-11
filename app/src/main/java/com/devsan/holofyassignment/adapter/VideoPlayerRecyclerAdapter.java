@@ -6,10 +6,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 import com.devsan.holofyassignment.R;
+import com.devsan.holofyassignment.databinding.ItemLayoutVideoBinding;
 import com.devsan.holofyassignment.models.MediaVO;
 import com.devsan.holofyassignment.ui.VideoPlayerViewHolder;
 
@@ -23,11 +25,6 @@ public class VideoPlayerRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private ItemClickListener itemClickListener;
 
-    public VideoPlayerRecyclerAdapter(ArrayList<MediaVO> mediaObjects, RequestManager requestManager) {
-        this.mediaObjects = mediaObjects;
-        this.requestManager = requestManager;
-    }
-
     public VideoPlayerRecyclerAdapter(ArrayList<MediaVO> mediaObjects,
                                       RequestManager requestManager,
                                       ItemClickListener itemClickListener) {
@@ -39,8 +36,10 @@ public class VideoPlayerRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new VideoPlayerViewHolder(
-                LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_layout_video, viewGroup, false));
+
+        ItemLayoutVideoBinding itemLayoutVideoBinding = DataBindingUtil
+                .inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_layout_video, viewGroup, false);
+        return new VideoPlayerViewHolder(itemLayoutVideoBinding);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class VideoPlayerRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
             public void onClick(View v) {
 
                 itemClickListener.onItemClick(viewHolder.getAdapterPosition(),
-                        mediaObject, ((VideoPlayerViewHolder)viewHolder).linearLayoutContainer);
+                        mediaObject, ((VideoPlayerViewHolder)viewHolder).itemLayoutVideoBinding.linearLayoutContainer);
             }
         });
     }

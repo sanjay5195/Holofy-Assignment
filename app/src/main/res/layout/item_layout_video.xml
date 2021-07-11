@@ -15,14 +15,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:background="@color/white"
         android:layout_marginBottom="8dp"
-        android:background="#fff"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp"
+            android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -33,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="16dp"
+                android:background="@color/white"
                 android:transitionName="simple_activity_transition">
 
                 <FrameLayout
@@ -40,16 +42,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:background="#000"
+                    android:background="@color/black"
                     android:scaleType="center">
 
                     <ImageView
                         android:id="@+id/thumbnail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#fff"
+                        android:background="@color/white"
                         android:scaleType="centerInside"
-                        android:src="#ffffff" />
+                        android:src="@color/white" />
 
                     <ImageView
                         android:id="@+id/volume_control"
@@ -98,6 +100,8 @@
                     android:layout_marginEnd="16dp"
                     android:text="ADSFGHJKL7654321`"
                     android:textColor="@color/grey"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

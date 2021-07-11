@@ -1,5 +1,6 @@
 package com.devsan.holofyassignment.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
@@ -7,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -94,10 +96,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(int pos,
                                             MediaVO mediaObject,
                                             LinearLayout linearLayout) {
+//                        activityMainBinding.recyclerView.pausePlayer();
 
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         intent.putExtra(EXTRA_ITEM, mediaObject);
-                        intent.putExtra(EXTRA_SEEK, activityMainBinding.recyclerView.seekPosition);
+                        intent.putExtra(EXTRA_SEEK, activityMainBinding.recyclerView.getSeekPosition());
                         intent.putExtra(EXTRA_TRANSITION_NAME, ViewCompat.getTransitionName(linearLayout));
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                                 linearLayout,
                                 ViewCompat.getTransitionName(linearLayout));
 
-                        startActivity(intent, options.toBundle());
+                        startActivityForResult(intent,DetailActivity.REQUEST_CODE, options.toBundle());
                     }
                 });
         activityMainBinding.recyclerView.setAdapter(adapter);
@@ -126,5 +129,19 @@ public class MainActivity extends AppCompatActivity {
         if (activityMainBinding.recyclerView != null)
             activityMainBinding.recyclerView.releasePlayer();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if(requestCode == DetailActivity.REQUEST_CODE) {
+
+                activityMainBinding.recyclerView.playerSeekTo(data.getLongExtra(EXTRA_SEEK, 0));
+            }
+
+        }
     }
 }

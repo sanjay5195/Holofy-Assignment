@@ -1,17 +1,25 @@
 package com.devsan.holofyassignment.ui;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.devsan.holofyassignment.R;
+import com.devsan.holofyassignment.databinding.ActivityDetailBinding;
 import com.devsan.holofyassignment.models.MediaVO;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,17 +36,22 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CODE = 0x2;
+
+    ActivityDetailBinding activityDetailBinding;
+    SimpleExoPlayer exoPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        activityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         supportPostponeEnterTransition();
 
@@ -46,16 +59,38 @@ public class DetailActivity extends AppCompatActivity {
         MediaVO mediaObject = extras.getParcelable(MainActivity.EXTRA_ITEM);
         long seekPos = extras.getLong(MainActivity.EXTRA_SEEK, 0);
 
-        TextView textView = (TextView) findViewById(R.id.textViewTitle);
-        LinearLayout frameLayout = (LinearLayout) findViewById(R.id.linearLayoutContainer);
-        SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) findViewById(R.id.idExoPlayerVIew);
-        textView.setText(mediaObject.getTitle());
-        SimpleExoPlayer exoPlayer;
+        activityDetailBinding.textViewTitle.setText(mediaObject.getTitle());
+        activityDetailBinding.textViewSubTitle.setText(mediaObject.getDescription());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = extras.getString(MainActivity.EXTRA_TRANSITION_NAME);
-            frameLayout.setTransitionName(imageTransitionName);
+            activityDetailBinding.linearLayoutContainer.setTransitionName(imageTransitionName);
         }
+        setThumbnail(mediaObject.getThumbnail());
+        setExoPlayer(mediaObject, seekPos);
+    }
+
+    private void setThumbnail(String thumbnailUrl) {
+
+        Glide.with(this)
+                .load(thumbnailUrl)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                    }
+                })
+        .into(activityDetailBinding.thumbnail);
+    }
+
+    private void setExoPlayer(MediaVO mediaObject, long seekToPos) {
 
         try {
 
@@ -88,12 +123,12 @@ public class DetailActivity extends AppCompatActivity {
 
             // inside our exoplayer view
             // we are setting our player
-            exoPlayerView.setPlayer(exoPlayer);
+            activityDetailBinding.idExoPlayerVIew.setPlayer(exoPlayer);
 
             // we are preparing our exoplayer
             // with media source.
             exoPlayer.prepare(mediaSource);
-            exoPlayer.seekTo(seekPos);
+            exoPlayer.seekTo(seekToPos);
 
             // we are setting our exoplayer
             // when it is ready.
@@ -120,7 +155,10 @@ public class DetailActivity extends AppCompatActivity {
 
                     switch (playbackState) {
                         case Player.STATE_READY:
-                            supportStartPostponedEnterTransition();
+                            activityDetailBinding.idExoPlayerVIew.setVisibility(View.VISIBLE);
+                            activityDetailBinding.thumbnail.setVisibility(View.GONE);
+                            activityDetailBinding.progressBar.setVisibility(View.GONE);
+//                            supportStartPostponedEnterTransition();
                             break;
                         default:
                             break;
@@ -164,5 +202,36 @@ public class DetailActivity extends AppCompatActivity {
             Log.e("TAG", "Error : " + e.toString());
         }
 
+
+    }
+
+    @Override
+    protected void onDestroy () {
+        super.onDestroy();
+        releasePlayer();
+    }
+
+
+    public void pausePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.setPlayWhenReady(false);
+            exoPlayer.getPlaybackState();
+        }
+    }
+
+    public void releasePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        supportFinishAfterTransition();
+
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.EXTRA_SEEK, exoPlayer.getCurrentPosition());
+        setResult(Activity.RESULT_OK, intent);
     }
 }
