@@ -41,7 +41,9 @@
                         android:id="@+id/idExoPlayerVIew"
                         android:layout_width="match_parent"
                         android:visibility="gone"
-                        android:layout_height="wrap_content" />
+                        android:focusable="true"
+                        app:controller_layout_id="@layout/custom_exo_controller_view"
+                        android:layout_height="match_parent" />
 
                     <ImageView
                         android:id="@+id/thumbnail"

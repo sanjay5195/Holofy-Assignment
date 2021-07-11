@@ -227,6 +227,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        pausePlayer();
+    }
+
+    @Override
     public void onBackPressed() {
         supportFinishAfterTransition();
 
